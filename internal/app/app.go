@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// RunApp starts application
 func RunApp() {
 
 	logger.Init()

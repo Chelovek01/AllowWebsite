@@ -10,6 +10,7 @@ import (
 	"net/http"
 )
 
+// GetPing gets a ping from the specified site
 func GetPing(c *gin.Context, m *memorycache.Cache) {
 
 	var data dto.DtoSiteName

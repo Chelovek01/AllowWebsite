@@ -6,13 +6,16 @@ import (
 	"AllowWebsite/pkg/memorycache"
 )
 
+// userService service for object of action
 type userService struct {
 }
 
+// NewWebsiteInfoService init new service
 func NewWebsiteInfoService() *userService {
 	return &userService{}
 }
 
+// GetPingFromSite returns an action object with site data
 func (u *userService) GetPingFromSite(nameOfSite string, m *memorycache.Cache) (*entity.WebsiteInfo, error) {
 	var result entity.WebsiteInfo
 
@@ -23,6 +26,7 @@ func (u *userService) GetPingFromSite(nameOfSite string, m *memorycache.Cache) (
 	return &result, nil
 }
 
+// GetSiteNameWithMaxPing returns an action object with data about the site with the maximum ping from the list
 func (u *userService) GetSiteNameWithMaxPing(s methods.KeyValue) (*entity.WebsiteInfo, error) {
 
 	var result entity.WebsiteInfo
@@ -33,6 +37,7 @@ func (u *userService) GetSiteNameWithMaxPing(s methods.KeyValue) (*entity.Websit
 	return &result, nil
 }
 
+// GetSiteNameWithMinPing returns an action object with data about the site with the minimum ping from the list
 func (u *userService) GetSiteNameWithMinPing(s methods.KeyValue) (*entity.WebsiteInfo, error) {
 	var result entity.WebsiteInfo
 
@@ -42,6 +47,7 @@ func (u *userService) GetSiteNameWithMinPing(s methods.KeyValue) (*entity.Websit
 	return &result, nil
 }
 
+// GetStatistic returns an action object with data about requests of endpoints
 func (u *userService) GetStatistic(cache *memorycache.Cache) (*entity.RequestStat, error) {
 	var result entity.RequestStat
 

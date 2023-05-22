@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// GetMaxPing gets a max ping from the specified list of websites
 func GetMaxPing(c *gin.Context, s methods.KeyValue) {
 
 	var data dto.DtoMaxPing

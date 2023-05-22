@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// GetMinPing gets a min ping from the specified list of websites
 func GetMinPing(c *gin.Context, s methods.KeyValue) {
 
 	var data dto.DtoMinPing

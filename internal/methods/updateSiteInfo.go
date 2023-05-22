@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+// UpdateSiteInfo fills the cache with the necessary data
 func UpdateSiteInfo(cache *memorycache.Cache) {
 
 	var wg sync.WaitGroup

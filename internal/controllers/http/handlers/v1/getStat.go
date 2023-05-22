@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// GetStatInfo gets statistic about requests from endpoints
 func GetStatInfo(c *gin.Context, cache *memorycache.Cache) {
 
 	var data dto.DtoStat

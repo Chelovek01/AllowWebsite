@@ -11,6 +11,7 @@ var (
 	ErrorLogger   *log.Logger
 )
 
+// Init logger
 func Init() {
 	file, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
