@@ -4,12 +4,12 @@ import (
 	"AllowWebsite/internal/controllers/dto"
 	"AllowWebsite/internal/domain/service"
 	"AllowWebsite/pkg/logger"
+	"AllowWebsite/pkg/memorycache"
 	"github.com/gin-gonic/gin"
-	"github.com/patrickmn/go-cache"
 	"net/http"
 )
 
-func GetStatInfo(c *gin.Context, cache *cache.Cache) {
+func GetStatInfo(c *gin.Context, cache *memorycache.Cache) {
 
 	var data dto.DtoStat
 

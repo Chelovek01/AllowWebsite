@@ -3,7 +3,7 @@ package service
 import (
 	"AllowWebsite/internal/domain/entity"
 	"AllowWebsite/internal/methods"
-	"github.com/patrickmn/go-cache"
+	"AllowWebsite/pkg/memorycache"
 )
 
 type userService struct {
@@ -13,11 +13,12 @@ func NewWebsiteInfoService() *userService {
 	return &userService{}
 }
 
-func (u *userService) GetPingFromSite(nameOfSite string, m map[string]float32) (*entity.WebsiteInfo, error) {
+func (u *userService) GetPingFromSite(nameOfSite string, m *memorycache.Cache) (*entity.WebsiteInfo, error) {
 	var result entity.WebsiteInfo
 
 	result.Website = nameOfSite
-	result.Ping = m[nameOfSite]
+	ping, _ := m.Get(nameOfSite)
+	result.Ping = ping.(float32)
 
 	return &result, nil
 }
@@ -41,7 +42,7 @@ func (u *userService) GetSiteNameWithMinPing(s methods.KeyValue) (*entity.Websit
 	return &result, nil
 }
 
-func (u *userService) GetStatistic(cache *cache.Cache) (*entity.RequestStat, error) {
+func (u *userService) GetStatistic(cache *memorycache.Cache) (*entity.RequestStat, error) {
 	var result entity.RequestStat
 
 	ping, found := cache.Get("got_ping")

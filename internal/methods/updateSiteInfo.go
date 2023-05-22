@@ -1,22 +1,36 @@
 package methods
 
 import (
+	"AllowWebsite/pkg/memorycache"
+	"bufio"
 	"context"
 	"fmt"
 	"log"
 	"net/http"
-	"sort"
+	"os"
 	"sync"
 	"time"
 )
 
-func UpdateSiteInfo(websiteList []string, resultMap map[string]float32, maxValue *KeyValue, minValue *KeyValue) {
+func UpdateSiteInfo(cache *memorycache.Cache) {
 
 	var wg sync.WaitGroup
 
-	var sortedStruct []KeyValue
-
 	for {
+
+		f, err := os.Open("websiteList.txt")
+		if err != nil {
+			panic(err)
+		}
+
+		var websiteList []string
+
+		sc := bufio.NewScanner(f)
+		for sc.Scan() {
+			websiteList = append(websiteList, sc.Text())
+		}
+
+		f.Close()
 
 		for _, val := range websiteList {
 
@@ -43,38 +57,43 @@ func UpdateSiteInfo(websiteList []string, resultMap map[string]float32, maxValue
 				}
 
 				start := time.Now()
-				resp, err := client.Do(req)
+				_, err = client.Do(req)
+				reqTime := time.Since(start).Seconds()
 
 				if err != nil {
 					fmt.Sprintf("'%s' website not allow", siteName)
 					return
 				}
 
-				reqTime := time.Since(start).Seconds()
+				cache.Set(siteName, float32(reqTime))
 
-				res := fmt.Sprintf("Status: %d | time: %2f", resp.StatusCode, reqTime)
-				fmt.Println(res)
+				_, existMaxPing := cache.Get("max_ping")
+				if existMaxPing == false {
+					cache.Set("max_ping", siteName)
+				} else {
+					key, _ := cache.Get("max_ping")
+					val, _ := cache.Get(key.(string))
+					if float32(reqTime) > val.(float32) {
+						cache.Set("max_ping", siteName)
+					}
+				}
 
-				resultMap[siteName] = float32(reqTime)
+				_, existMinPing := cache.Get("min_ping")
+				if existMinPing == false {
+					cache.Set("min_ping", siteName)
+				} else {
+					key, _ := cache.Get("min_ping")
+					val, _ := cache.Get(key.(string))
+					if float32(reqTime) < val.(float32) {
+
+						cache.Set("min_ping", siteName)
+					}
+				}
 
 			}()
 
 		}
 		wg.Wait()
-
-		for key, val := range resultMap {
-			sortedStruct = append(sortedStruct, KeyValue{key, val})
-		}
-
-		sort.Slice(sortedStruct, func(i, j int) bool {
-			return sortedStruct[i].Value > sortedStruct[j].Value
-		})
-
-		maxValue.Value = sortedStruct[0].Value
-		maxValue.Key = sortedStruct[0].Key
-
-		minValue.Value = sortedStruct[len(sortedStruct)-1].Value
-		minValue.Key = sortedStruct[len(sortedStruct)-1].Key
 
 		time.Sleep(time.Second * 60)
 	}

@@ -4,12 +4,13 @@ import (
 	"AllowWebsite/internal/controllers/dto"
 	"AllowWebsite/internal/domain/service"
 	"AllowWebsite/pkg/logger"
+	"AllowWebsite/pkg/memorycache"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func GetPing(c *gin.Context, m map[string]float32) {
+func GetPing(c *gin.Context, m *memorycache.Cache) {
 
 	var data dto.DtoSiteName
 
@@ -18,11 +19,11 @@ func GetPing(c *gin.Context, m map[string]float32) {
 		logger.ErrorLogger.Println(err)
 	}
 
-	_, ok := m[data.SiteName]
+	_, ok := m.Get(data.SiteName)
 	if ok == false {
 		text := fmt.Sprintf("website %s not avalible ", data.SiteName)
 		c.JSON(http.StatusOK, gin.H{"response": text})
-
+		return
 	}
 
 	serviceWebsiteInfo := service.NewWebsiteInfoService()
