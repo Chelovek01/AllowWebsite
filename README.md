@@ -20,7 +20,7 @@
   go build -v ./cmd/app/main.go
   ```
 ```sh
-  ./main.exe
+./main.exe
 ```
 Приложение запустится на
 ```sh
